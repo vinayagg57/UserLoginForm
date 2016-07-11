@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.vinayaggarwal.registrationapp.LoginSucessfulActivity">
+
+    <include
+        android:id="@+id/toolbar_login_sucess"
+        layout="@layout/toolbar_activity"></include>
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="#fff44336"
+    android:text="Welcome"
+    android:gravity="center_horizontal"
+    android:textSize="40sp"
+    android:layout_marginTop="20dp"
+    />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#ff259b24"
+        android:textSize="20sp"
+        android:text="fhebvhb"
+        android:id="@+id/textView_login_sucess"
+        android:gravity="center_horizontal"
+        />
+
+</LinearLayout>
