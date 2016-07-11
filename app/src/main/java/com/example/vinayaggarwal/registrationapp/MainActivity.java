@@ -18,7 +18,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
                 username = username_et.getText().toString();
                 password = password_et.getText().toString();
                 if (username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "All field are mendatory", Toast.LENGTH_LONG).show();
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
                             .setCancelable(false)
                             .setMessage("All field are mandatory")
@@ -83,18 +81,19 @@ public class MainActivity extends AppCompatActivity {
                         public void onResponse(String response) {
 
                             try {
-                                JSONArray jsonArray = new JSONArray(response);
-                                JSONObject jsonObject = jsonArray.getJSONObject(0);
-                                String getuserName = jsonObject.getString("status");
-                                if (getuserName.equals("Fail")) {
-                                    Toast.makeText(MainActivity.this, jsonObject.getString("msg"), Toast.LENGTH_SHORT).show();
-                                } else {
+                                JSONObject jsonObject = new JSONObject(response);
+                                System.out.println(response);
+                                String getuserName = jsonObject.getString("response");
+                                if (getuserName.equals("Success")) {
                                     Intent intent = new Intent(MainActivity.this, LoginSucessfulActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putString("userName", username);
                                     intent.putExtras(bundle);
                                     startActivity(intent);
                                     finish();
+                                } else {
+                                    Toast.makeText(MainActivity.this, jsonObject.optString("msg"), Toast.
+                                            LENGTH_LONG).show();
                                 }
 
 
@@ -115,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("username", username);
                             map.put("password", password);
-
+                            System.out.println(map);
                             return map;
                         }
                     };

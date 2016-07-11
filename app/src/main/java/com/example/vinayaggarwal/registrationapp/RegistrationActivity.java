@@ -17,12 +17,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
     View toolbarView;
@@ -58,81 +59,89 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 firstName = firstName_et.getText().toString();
-                lastName = firstName_et.getText().toString();
-                address1 = firstName_et.getText().toString();
-                address2 = firstName_et.getText().toString();
-                email = firstName_et.getText().toString();
-                password = firstName_et.getText().toString();
-                pincode = firstName_et.getText().toString();
-                mobile = firstName_et.getText().toString();
+                lastName = lastName_et.getText().toString();
+                address1 = address_et_1.getText().toString();
+                address2 = address_et_2.getText().toString();
+                email = email_et.getText().toString();
+                password = password_et.getText().toString();
+                pincode = pincode_et.getText().toString();
+                mobile = mobile_et.getText().toString();
+
+
 
                 if (firstName.isEmpty() || lastName.isEmpty() || address1.isEmpty() || address2.isEmpty() || email.isEmpty() || password.isEmpty() || pincode.isEmpty() || mobile.isEmpty()) {
                     bulider.setMessage("All the fileds are mendatory");
                     displayAlert("empty");
-                } else {
-
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, reg_url, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-
-                            try {
-                                JSONArray jsonArray = new JSONArray(response);
-                                JSONObject jsonObject = jsonArray.getJSONObject(0);
-                                String mStatus = jsonObject.getString("status");
-                                String mMessage = jsonObject.getString("msg");
-//                              bulider.setMessage(mMessage);
-//                              displayAlert(mStatus);
-                                if (mStatus.equals("Fail")) {
-                                    Toast.makeText(RegistrationActivity.this, jsonObject.getString("msg"), Toast.LENGTH_SHORT).show();
-
-                                    firstName_et.setText("");
-                                    lastName_et.setText("");
-                                    address_et_1.setText("");
-                                    address_et_2.setText("");
-                                    email_et.setText("");
-                                    password_et.setText("");
-                                    pincode_et.setText("");
-                                    mobile_et.setText("");
-                                } else if (mStatus.equals("Success")) {
-                                    Toast.makeText(RegistrationActivity.this, jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-
-                            Map<String, String> map = new HashMap<String, String>();
-                            map.put("user_email", email);
-                            map.put("user_password", password);
-                            map.put("user_mobile", mobile);
-                            map.put("firstname", firstName);
-                            map.put("lastname", lastName);
-                            map.put("address1", address1);
-                            map.put("address2", address2);
-                            map.put("pin_code", pincode);
-                            return map;
-                        }
-                    };
-                    MyConnection.getInstance(RegistrationActivity.this).addToRequestque(stringRequest);
-
-
-//                    Toast.makeText(RegistrationActivity.this,"registered Sucessfully",Toast.LENGTH_LONG).show();
-//                    Intent intent = new Intent(RegistrationActivity.this,MainActivity.class);
-//                    startActivity(intent);
-//                    finish();
-
+                } else if(!isValidEmail(email))
+                {
+                    bulider.setMessage("Please enter a valid email id");
+                    displayAlert("inValidEmail");
                 }
-            }
-        });
+                else
+                    {
+
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST, reg_url, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    String mStatus = jsonObject.optString("response");
+                                    int mMessage = jsonObject.optInt("msg");
+
+                                    if (mStatus.equals("Success")) {
+
+                                        Toast.makeText(RegistrationActivity.this, "Data Saved Sucessfully", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(RegistrationActivity.this,MainActivity.class);
+                                          startActivity(intent);
+                                            finish();
+
+                                    } else  {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this)
+                                                .setCancelable(false)
+                                                .setMessage(jsonObject.getString("msg"))
+                                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        dialogInterface.dismiss();
+                                                    }
+                                                });
+                                        dialog = builder.create();
+                                        dialog.show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                            }
+                        }) {
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
+
+                                Map<String, String> map = new HashMap<String, String>();
+                                map.put("user_email", email);
+                                map.put("user_password", password);
+                                map.put("user_mobile", mobile);
+                                map.put("firstname", firstName);
+                                map.put("lastname", lastName);
+                                map.put("address1", address1);
+                                map.put("address2", address2);
+                                map.put("pin_code", pincode);
+                                System.out.println(map);
+                                return map;
+                            }
+                        };
+                        MyConnection.getInstance(RegistrationActivity.this).addToRequestque(stringRequest);
+
+                    }
+                }
+            });
+
 
         toolbarText.setText("Registration");
         toolbarImv.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +166,9 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if (code.equals("Empty")) {
                     dialog.dismiss();
-                } else if (code.equals("Success")) {
+                }else if (code.equals("inValidEmail")) {
+                }
+                else if (code.equals("Success")) {
                     finish();
                 } else if (code.equals("Fail")) {
 
@@ -179,5 +190,13 @@ public class RegistrationActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private boolean isValidEmail(String email) {
+        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
 
 }
