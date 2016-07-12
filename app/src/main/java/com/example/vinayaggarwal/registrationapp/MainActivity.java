@@ -3,6 +3,7 @@ package com.example.vinayaggarwal.registrationapp;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         mTitle.setText("Login Page");
         username_et = (EditText) findViewById(R.id.edit_username_login);
         password_et = (EditText) findViewById(R.id.edit_password_login);
+        password_et.setTypeface(Typeface.DEFAULT);
+
         login = (Button) findViewById(R.id.login_btn);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
                                     startActivity(intent);
                                     finish();
                                 } else {
-                                    Toast.makeText(MainActivity.this, jsonObject.optString("msg"), Toast.
-                                            LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, jsonObject.optString("msg"), Toast.LENGTH_LONG).show();
                                 }
 
 
@@ -112,14 +114,13 @@ public class MainActivity extends AppCompatActivity {
                         protected Map<String, String> getParams() throws AuthFailureError {
 
                             Map<String, String> map = new HashMap<String, String>();
-                            map.put("username", username);
+                            map.put("email", username);
                             map.put("password", password);
                             System.out.println(map);
                             return map;
                         }
                     };
                     MyConnection.getInstance(MainActivity.this).addToRequestque(stringRequest);
-
                 }
             }
         });

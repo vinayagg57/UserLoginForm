@@ -24,7 +24,7 @@
    <TextView
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:text="User Name"
+       android:text="User Email id"
        android:textColor="#2196f3"
        android:textSize="18sp"/>
     <EditText
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/edit_username_login"
         android:background="@android:color/transparent"
-android:hint="Enter User Name"
+android:hint="Enter User Email id"
         android:textColor="#de000000"
         android:textSize="18sp"
         />

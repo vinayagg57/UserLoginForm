@@ -46,5 +46,4 @@ public class LoginSucessfulActivity extends AppCompatActivity {
         startActivity(intent);
         this.finish();
     }
-
 }

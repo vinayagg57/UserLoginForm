@@ -70,7 +70,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
                 if (firstName.isEmpty() || lastName.isEmpty() || address1.isEmpty() || address2.isEmpty() || email.isEmpty() || password.isEmpty() || pincode.isEmpty() || mobile.isEmpty()) {
-                    bulider.setMessage("All the fileds are mendatory");
+                    bulider.setMessage("All the fields are mendatory");
                     displayAlert("empty");
                 } else if(!isValidEmail(email))
                 {
@@ -91,7 +91,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                     if (mStatus.equals("Success")) {
 
-                                        Toast.makeText(RegistrationActivity.this, "Data Saved Sucessfully", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegistrationActivity.this, "Registered Sucessfully", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(RegistrationActivity.this,MainActivity.class);
                                           startActivity(intent);
                                             finish();
@@ -165,24 +165,9 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (code.equals("Empty")) {
-                    dialog.dismiss();
+                 //   dialog.dismiss();
                 }else if (code.equals("inValidEmail")) {
-                }
-                else if (code.equals("Success")) {
-                    finish();
-                } else if (code.equals("Fail")) {
-
-                    firstName_et.setText("");
-                    lastName_et.setText("");
-                    address_et_1.setText("");
-                    address_et_2.setText("");
-                    email_et.setText("");
-                    password_et.setText("");
-                    pincode_et.setText("");
-                    mobile_et.setText("");
-
-                }
-
+                   }
             }
 
         });
